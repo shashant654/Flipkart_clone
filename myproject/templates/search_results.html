@@ -1,0 +1,380 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results for "{{ search_query }}"{% endblock %}
+
+{% block content %}
+<div class="container py-2">
+  <!-- Search Header -->
+  <div class="text-center mb-5">
+    <h5 class="display fw-bold text-gradient-info mb-3">
+      <i class="bi bi-search me-2"></i>Search Results
+    </h5>
+    <p class="lead text-muted">
+      Showing results for "{{ search_query }}"
+    </p>
+    <div class="divider mx-auto bg-info mb-4"></div>
+    
+    <div class="d-flex justify-content-center align-items-center">
+      <span class="badge bg-info rounded-pill px-3 py-2">
+        {% if product_page %}{{ product_page.paginator.count }} products{% endif %}
+        {% if category_page and product_page %} | {% endif %}
+        {% if category_page %}{{ category_page.paginator.count }} categories{% endif %}
+      </span>
+    </div>
+  </div>
+  
+  <!-- Empty Search/No Results Messages -->
+  {% if not search_query %}
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="alert alert-warning rounded-4 shadow-sm text-center">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          Please enter a search term.
+        </div>
+      </div>
+    </div>
+  {% elif not has_results %}
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="alert alert-info rounded-4 shadow-sm text-center">
+          <i class="bi bi-info-circle-fill me-2"></i>
+          No results found for "{{ search_query }}". Try different keywords.
+        </div>
+        <div class="text-center mt-4">
+          <h5 class="mb-3 text-muted">Suggestions:</h5>
+          <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'categories' %}" class="btn btn-outline-info rounded-pill">
+              <i class="bi bi-collection me-1"></i>Browse Categories
+            </a>
+            <a href="{% url 'home' %}" class="btn btn-info rounded-pill text-white">
+              <i class="bi bi-star-fill me-1"></i>Featured Products
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <!-- Products Section -->
+    {% if product_page and product_page.object_list %}
+      <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h4 class="fw-bold text-gradient-info">
+            <i class="bi bi-box-seam me-2"></i>Products
+          </h4>
+          <small class="text-muted">Showing {{ product_page.start_index }}-{{ product_page.end_index }} of {{ product_page.paginator.count }}</small>
+        </div>
+        
+        <div class="row g-4">
+          {% for product in product_page %}
+            <div class="col-xl-3 col-lg-4 col-md-6">
+              <div class="card h-100 border-0 rounded-4 overflow-hidden hover-lift">
+                <div class="position-relative">
+                  <a href="{% url 'product_detail' product.id %}">
+                    <img src="{{ product.image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                  </a>
+                  
+                  {% if product.original_price > product.selling_price %}
+                    <span class="badge bg-danger position-absolute top-0 end-0 m-2">
+                      {{ product.discount_percentage }}% OFF
+                    </span>
+                  {% endif %}
+                  
+                  {% if product.quantity <= 0 %}
+                    <span class="badge bg-dark position-absolute top-0 start-0 m-2">Out of Stock</span>
+                  {% endif %}
+                </div>
+                
+                <div class="card-body d-flex flex-column">
+                  <div class="mb-2">
+                    <h5 class="card-title fw-bold mb-1">{{ product.name|truncatechars:30 }}</h5>
+                    <div class="d-flex align-items-center mb-2">
+                      <i class="bi bi-star-fill text-warning me-1"></i>
+                      <small class="text-muted">4.8 (120 reviews)</small>
+                    </div>
+                    <p class="card-text text-muted">
+                      {{ product.description|truncatechars:80 }}
+                    </p>
+                  </div>
+
+                  <!-- Price Section -->
+                  <div class="mt-auto">
+                    {% if product.original_price > product.selling_price %}
+                      <div class="d-flex align-items-center">
+                        <del class="text-muted me-2">₹{{ product.original_price }}</del>
+                        <span class="badge bg-danger-soft text-danger">
+                          Save ₹{{ product.discount_amount }}
+                        </span>
+                      </div>
+                    {% endif %}
+                    <h4 class="text-success fw-bold my-2">
+                      ₹{{ product.selling_price }}
+                    </h4>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                      <a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-outline-info flex-grow-1 rounded-pill">
+                        <i class="bi bi-heart me-1"></i> Wishlist
+                      </a>
+                      {% if product.quantity > 0 %}
+                        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-info flex-grow-1 rounded-pill text-white">
+                          <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                        </a>
+                      {% else %}
+                        <button class="btn btn-secondary flex-grow-1 rounded-pill" disabled>
+                          <i class="bi bi-cart-x me-1"></i> Out of Stock
+                        </button>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        
+        <!-- Products Pagination -->
+        {% if product_page.has_other_pages %}
+          <nav aria-label="Products pagination" class="mt-5">
+            <ul class="pagination justify-content-center">
+              {% if product_page.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?q={{ search_query }}&product_page=1" aria-label="First">
+                    <i class="bi bi-chevron-double-left"></i>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?q={{ search_query }}&product_page={{ product_page.previous_page_number }}" aria-label="Previous">
+                    <i class="bi bi-chevron-left"></i>
+                  </a>
+                </li>
+              {% endif %}
+              
+              {% for num in product_page.paginator.page_range %}
+                {% if product_page.number == num %}
+                  <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num > product_page.number|add:'-3' and num < product_page.number|add:'3' %}
+                  <li class="page-item"><a class="page-link" href="?q={{ search_query }}&product_page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+              {% endfor %}
+              
+              {% if product_page.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?q={{ search_query }}&product_page={{ product_page.next_page_number }}" aria-label="Next">
+                    <i class="bi bi-chevron-right"></i>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?q={{ search_query }}&product_page={{ product_page.paginator.num_pages }}" aria-label="Last">
+                    <i class="bi bi-chevron-double-right"></i>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+      </section>
+    {% endif %}
+    
+    <!-- Categories Section -->
+    {% if category_page and category_page.object_list %}
+      <section class="mt-5 pt-5 border-top">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h4 class="fw-bold text-gradient-info">
+            <i class="bi bi-collection me-2"></i>Categories
+          </h4>
+          <small class="text-muted">Showing {{ category_page.start_index }}-{{ category_page.end_index }} of {{ category_page.paginator.count }}</small>
+        </div>
+        
+        <div class="row g-4">
+          {% for category in category_page %}
+            <div class="col-xl-4 col-lg-6">
+              <div class="card h-100 border-0 rounded-4 overflow-hidden hover-lift">
+                <div class="position-relative">
+                  <a href="{% url 'category_products' category.id %}">
+                    {% if category.image %}
+                      <img src="{{ category.image.url }}" class="card-img-top category-image" alt="{{ category.name }}">
+                    {% else %}
+                      <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <span class="text-muted">No image available</span>
+                      </div>
+                    {% endif %}
+                    <div class="category-overlay"></div>
+                  </a>
+                </div>
+                <div class="card-body d-flex flex-column">
+                  <div>
+                    <h5 class="card-title fw-bold">{{ category.name }}</h5>
+                    <p class="card-text text-muted">{{ category.description|truncatewords:15 }}</p>
+                  </div>
+                  <div class="mt-auto">
+                    <a href="{% url 'category_products' category.id %}" class="btn btn-info w-100 rounded-pill text-white">
+                      View {{ category.products.count }} Products <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        
+        <!-- Categories Pagination -->
+        {% if category_page.has_other_pages %}
+          <nav aria-label="Categories pagination" class="mt-5">
+            <ul class="pagination justify-content-center">
+              {% if category_page.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?q={{ search_query }}&category_page=1" aria-label="First">
+                    <i class="bi bi-chevron-double-left"></i>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?q={{ search_query }}&category_page={{ category_page.previous_page_number }}" aria-label="Previous">
+                    <i class="bi bi-chevron-left"></i>
+                  </a>
+                </li>
+              {% endif %}
+              
+              {% for num in category_page.paginator.page_range %}
+                {% if category_page.number == num %}
+                  <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num > category_page.number|add:'-3' and num < category_page.number|add:'3' %}
+                  <li class="page-item"><a class="page-link" href="?q={{ search_query }}&category_page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+              {% endfor %}
+              
+              {% if category_page.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?q={{ search_query }}&category_page={{ category_page.next_page_number }}" aria-label="Next">
+                    <i class="bi bi-chevron-right"></i>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?q={{ search_query }}&category_page={{ category_page.paginator.num_pages }}" aria-label="Last">
+                    <i class="bi bi-chevron-double-right"></i>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+      </section>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+  /* Inherited styles from category_products.html */
+  .bg-gradient-info {
+    background: linear-gradient(135deg, #17a2b8, #1abc9c);
+  }
+
+  .text-gradient-info {
+    background: linear-gradient(to right, #17a2b8, #1abc9c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .divider {
+    width: 80px;
+    height: 4px;
+    opacity: 1;
+  }
+
+  .product-image {
+    height: 200px;
+    object-fit: contain;
+    background-color: #f8f9fa;
+    padding: 10px;
+    transition: transform 0.3s ease;
+  }
+
+  .hover-lift {
+    transition: all 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .bg-danger-soft {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+
+  .btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    transition: all 0.2s ease;
+  }
+
+  .btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+  }
+
+  .btn-outline-info {
+    color: #17a2b8;
+    border-color: #17a2b8;
+  }
+
+  .btn-outline-info:hover {
+    background-color: rgba(23, 162, 184, 0.1);
+  }
+
+  .rounded-pill {
+    border-radius: 50rem !important;
+  }
+
+  .badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+  }
+  
+  /* Additional styles for search page */
+  .category-image {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .category-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    transition: background 0.3s ease;
+  }
+  
+  .hover-lift:hover .category-image {
+    transform: scale(1.05);
+  }
+  
+  .hover-lift:hover .category-overlay {
+    background: rgba(0,0,0,0.5);
+  }
+  
+  .page-item.active .page-link {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+  }
+  
+  .page-link {
+    color: #17a2b8;
+  }
+  
+  @media (max-width: 767.98px) {
+    .product-image {
+      height: 150px;
+    }
+    
+    .category-image {
+      height: 150px;
+    }
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="inventory-management-container">
+    <h1><i class="fas fa-boxes"></i> Inventory Management</h1>
+    
+    <div class="inventory-filters">
+        <form method="get" class="filter-form">
+            <div class="form-group">
+                <input type="text" name="search" placeholder="Search products..." 
+                       value="{{ search_query }}" class="search-input">
+            </div>
+            <div class="form-group">
+                <select name="category" class="category-select">
+                    <option value="all">All Categories</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category_filter == category.id|stringformat:"s" %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <select name="stock" class="stock-select">
+                    <option value="all" {% if stock_filter == 'all' %}selected{% endif %}>All Stock Levels</option>
+                    <option value="low" {% if stock_filter == 'low' %}selected{% endif %}>Low Stock (<10)</option>
+                    <option value="out" {% if stock_filter == 'out' %}selected{% endif %}>Out of Stock</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+        </form>
+    </div>
+    
+    <div class="inventory-stats">
+        <div class="stat-card">
+            <h3>Total Products</h3>
+            <p>{{ page_obj.paginator.count }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Low Stock</h3>
+            <p>{{ low_stock_count }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Out of Stock</h3>
+        <p>{{ out_of_stock_count }}</p>
+        </div>
+    </div>
+    
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Sold</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in page_obj %}
+            <tr>
+                <td>
+                    <a href="{% url 'admin:accounts_product_change' product.id %}">
+                        {{ product.name }}
+                    </a>
+                </td>
+                <td>{{ product.category.name }}</td>
+                <td>${{ product.selling_price }}</td>
+                <td class="{% if product.quantity == 0 %}text-danger{% elif product.quantity < 10 %}text-warning{% endif %}">
+                    {{ product.quantity }}
+                </td>
+                <td>{{ product.total_sold|default:0 }}</td>
+                <td>
+                    {% if product.quantity == 0 %}
+                    <span class="status-badge status-out">Out of Stock</span>
+                    {% elif product.quantity < 10 %}
+                    <span class="status-badge status-low">Low Stock</span>
+                    {% else %}
+                    <span class="status-badge status-in-stock">In Stock</span>
+                    {% endif %}
+                </td>
+                <td class="actions">
+                    <a href="{% url 'admin:accounts_product_change' product.id %}" class="btn btn-sm btn-edit">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'admin:accounts_product_delete' product.id %}" class="btn btn-sm btn-delete">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter != 'all' %}&category={{ category_filter }}{% endif %}{% if stock_filter != 'all' %}&stock={{ stock_filter }}{% endif %}">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter != 'all' %}&category={{ category_filter }}{% endif %}{% if stock_filter != 'all' %}&stock={{ stock_filter }}{% endif %}">previous</a>
+            {% endif %}
+            
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter != 'all' %}&category={{ category_filter }}{% endif %}{% if stock_filter != 'all' %}&stock={{ stock_filter }}{% endif %}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter != 'all' %}&category={{ category_filter }}{% endif %}{% if stock_filter != 'all' %}&stock={{ stock_filter }}{% endif %}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+1. outside ur project => venv\Scripts\activate 2 => .\myenv\Scripts\Activate.ps1
+cd myproject 3. pip install django-jet-reboot 4. INSTALLED_APPS = [
+'jet.dashboard', # Optional, for dashboard widgets 'jet', # Required
+'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes',
+'django.contrib.sessions', 'django.contrib.messages',
+'django.contrib.staticfiles', 'accounts', ] 5. from django.contrib import admin
+from django.urls import path, include urlpatterns = [ path('jet/',
+include('jet.urls', 'jet')), # Jet core path('jet/dashboard/',
+include('jet.dashboard.urls', 'jet-dashboard')), # Optional path('admin/',
+admin.site.urls), ] 6. python -m pip install --upgrade pip 7. python manage.py
+migrate python manage.py runserver pip install psycopg2-binary pip freeze >
+requirements.txt => using this command will create a requirements.txt file with
+all the installed packages in your virtual environment. and run this => pip
+install -r requirements.txt Because Django tracks changes at the app level, not
+per model. => So, if you add a new model to an app, you need to run
+`makemigrations` for that app to create the migration file for the new model. =>
+Django doesn't support running makemigrations or migrate for just a single model
+directly. Migrations are handled at the app level, not at the model level.
