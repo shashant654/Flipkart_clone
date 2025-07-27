@@ -4,11 +4,11 @@ pip install django razorpay
 pip freeze > requirements.txt
 
 
-
+-----------------------------------------------------------------------
 ✅ What is a Procfile?
 A Procfile tells Render (or any other platform like Heroku) how to start your app — in this case, it tells Render to run Django using gunicorn, a production web server.
 
-
+-------------------------------------------------------------------------------------
 ✅ Step 1: Install Required Deployment Packages
 You're missing a few required deployment libraries for Render. Install them now:
 
@@ -16,7 +16,14 @@ You're missing a few required deployment libraries for Render. Install them now:
 pip install gunicorn whitenoise dj-database-url psycopg2-binary
 Then update requirements.txt again:
 
-
+------------------------------------------------------
 pip freeze > requirements.txt
-
+---------------------------------------------------
 pip install setuptools
+
+-------------------------------------------------------------
+Also Update settings.py to read from .env
+Install python-decouple if you haven't:
+
+
+pip install python-decouple
