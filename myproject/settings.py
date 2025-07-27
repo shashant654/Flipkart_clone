@@ -11,7 +11,13 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 import os
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = [
+    'flipkart-clone-1-qe0l.onrender.com',
+    'localhost',
+    '127.0.0.1'
+]
+
 
 
 # Application definition
