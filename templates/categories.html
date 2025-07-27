@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Categories - MySite{% endblock %}
+{% block content %}
+
+<div class="container py-2">
+  <h2 class="mb-5 text-center fw-bold display-5 text-gradient-info">
+    <i class="bi bi-grid-3x3-gap-fill me-2"></i>Shop by Category
+  </h2>
+
+  <div class="row g-4">
+    {% for cat in categories %}
+    <div class="col-lg-4 col-md-6">
+      <div class="card h-100 border-0 shadow-sm overflow-hidden hover-lift">
+        <div class="position-relative overflow-hidden rounded-top" style="height: 220px;">
+          <img
+            src="{{ cat.image.url }}"
+            alt="{{ cat.name }}"
+            class="img-fluid w-100 h-100 object-cover transition-all"
+            style="transition-duration: 0.5s;"
+          />
+          <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-4">
+            <div>
+              <h3 class="text-white mb-2">{{ cat.name }}</h3>
+              <a href="{% url 'category_products' cat.id %}" class="btn btn-outline-light btn-sm stretched-link">
+                Explore <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body bg-light">
+          <p class="text-muted mb-0">{{ cat.description|truncatewords:20 }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .bg-gradient-info {
+    background: linear-gradient(135deg, #17a2b8, #1abc9c);
+  }
+  
+  .text-gradient-info {
+    background: linear-gradient(to right, #17a2b8, #1abc9c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .hover-lift {
+    transition: all 0.3s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 2rem rgba(0,0,0,0.1) !important;
+  }
+  
+  .category-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .hover-lift:hover .category-overlay {
+    opacity: 1;
+  }
+  
+  .transition-all {
+    transition: all 0.3s ease;
+  }
+  
+  .rounded-top {
+    border-top-left-radius: 0.8rem !important;
+    border-top-right-radius: 0.8rem !important;
+  }
+  
+  .btn-outline-light:hover {
+    background-color: rgba(255,255,255,0.1);
+  }
+  
+  .stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    content: "";
+  }
+</style>
+
+{% endblock %}

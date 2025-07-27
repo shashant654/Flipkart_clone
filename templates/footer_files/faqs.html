@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQs - E-Commerce{% endblock %}
+
+{% block content %}
+<div class="container py-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="text-center mb-5">
+        <h1 class="fw-bold display-5 text-gradient-info">
+          <i class="bi bi-question-circle-fill me-2"></i>Frequently Asked Questions
+        </h1>
+        <p class="text-muted">Quick answers to common questions</p>
+      </div>
+
+      <div class="accordion" id="faqAccordion">
+        <!-- Question 1 -->
+        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden hover-lift-sm">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button collapsed rounded-4 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+              <i class="bi bi-cart-check me-2 text-info"></i> How do I place an order?
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              <p>To place an order:</p>
+              <ol>
+                <li>Browse our products and add items to your cart</li>
+                <li>Proceed to checkout when ready</li>
+                <li>Enter your shipping and payment details</li>
+                <li>Review your order and confirm</li>
+                <li>You'll receive an order confirmation email</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden hover-lift-sm">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed rounded-4 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+              <i class="bi bi-credit-card me-2 text-info"></i> What payment methods do you accept?
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              <p>We accept various payment methods including:</p>
+              <ul>
+                <li>Credit/Debit Cards (Visa, MasterCard, American Express)</li>
+                <li>PayPal</li>
+                <li>UPI Payments</li>
+                <li>Net Banking</li>
+                <li>Cash on Delivery (for select locations)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden hover-lift-sm">
+          <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button collapsed rounded-4 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+              <i class="bi bi-truck me-2 text-info"></i> How can I track my order?
+            </button>
+          </h2>
+          <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              <p>Once your order is shipped, you'll receive a tracking number via email. You can:</p>
+              <ol>
+                <li>Log in to your account and check 'My Orders'</li>
+                <li>Use the tracking link in your confirmation email</li>
+                <li>Contact our support for help</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden hover-lift-sm">
+          <h2 class="accordion-header" id="headingFour">
+            <button class="accordion-button collapsed rounded-4 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+              <i class="bi bi-arrow-counterclockwise me-2 text-info"></i> What is your return policy?
+            </button>
+          </h2>
+          <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              <p>We offer a 30-day return policy for most items. Please see our <a href="{% url 'return_policy' %}" class="text-info">Return Policy</a> for full details.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden hover-lift-sm">
+          <h2 class="accordion-header" id="headingFive">
+            <button class="accordion-button collapsed rounded-4 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+              <i class="bi bi-headset me-2 text-info"></i> How do I contact customer support?
+            </button>
+          </h2>
+          <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              <p>You can reach our support team:</p>
+              <ul>
+                <li>Email: <a href="mailto:support@ecommerce.com" class="text-info">support@ecommerce.com</a></li>
+                <li>Phone: +91 7004330655 (Mon-Sat, 9AM–6PM)</li>
+                <li>Live chat on our website</li>
+                <li>Via <a href="{% url 'contact' %}" class="text-info">Contact Us</a> form</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Prompt -->
+      <div class="mt-5 p-4 bg-light border rounded-4 shadow-sm text-center hover-lift-sm">
+        <h4 class="fw-semibold">Still have questions?</h4>
+        <p class="mb-0">
+          If you didn't find the answer you're looking for, please <a href="{% url 'contact' %}" class="text-info fw-bold">contact us</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-gradient-info {
+    background: linear-gradient(135deg, #17a2b8, #1abc9c);
+  }
+  
+  .text-gradient-info {
+    background: linear-gradient(to right, #17a2b8, #1abc9c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .hover-lift-sm {
+    transition: all 0.2s ease;
+  }
+  
+  .hover-lift-sm:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1) !important;
+  }
+  
+  .rounded-4 {
+    border-radius: 0.8rem !important;
+  }
+  
+  .accordion-button:not(.collapsed) {
+    background-color: rgba(23, 162, 184, 0.1);
+    color: #17a2b8;
+  }
+  
+  .accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(23, 162, 184, 0.25);
+    border-color: #17a2b8;
+  }
+</style>
+{% endblock %}

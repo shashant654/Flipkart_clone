@@ -1,0 +1,361 @@
+{% extends 'base.html' %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <form action="{% url 'placeorder' %}" method="POST" class="needs-validation" novalidate id="checkout-form">
+        {% csrf_token %}
+        <div class="card border-0 shadow-lg overflow-hidden hover-lift">
+          <div class="card-header bg-gradient-info text-white py-3">
+            <h4 class="mb-0 fw-semibold">
+              <i class="bi bi-receipt-cutoff me-2"></i>Billing Details
+            </h4>
+          </div>
+          
+          <div class="card-body p-4 p-md-5">
+            <div class="row g-3">
+              <!-- First Name -->
+              <div class="col-md-6">
+                <label for="fname" class="form-label fw-medium text-secondary">First Name <span class="text-danger">*</span></label>
+                <div class="input-group has-validation">
+                  <span class="input-group-text bg-light"><i class="bi bi-person text-info"></i></span>
+                  <input type="text" class="form-control form-control-lg py-2" id="fname" name="fname" required placeholder="John">
+                  <div class="invalid-feedback">
+                    Please enter your first name.
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Last Name -->
+              <div class="col-md-6">
+                <label for="lname" class="form-label fw-medium text-secondary">Last Name <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="bi bi-person text-info"></i></span>
+                  <input type="text" class="form-control form-control-lg py-2" id="lname" name="lname" required placeholder="Doe">
+                  <div class="invalid-feedback">
+                    Please enter your last name.
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Email -->
+              <div class="col-md-6">
+                <label for="email" class="form-label fw-medium text-secondary">Email <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="bi bi-envelope text-info"></i></span>
+                  <input type="email" class="form-control form-control-lg py-2" id="email" name="email" required placeholder="john@example.com">
+                  <div class="invalid-feedback">
+                    Please enter a valid email address.
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Phone -->
+              <div class="col-md-6">
+                <label for="phone" class="form-label fw-medium text-secondary">Phone <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="bi bi-telephone text-info"></i></span>
+                  <input type="tel" class="form-control form-control-lg py-2" id="phone" name="phone" required placeholder="+91 9876543210">
+                  <div class="invalid-feedback">
+                    Please enter your phone number.
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Address -->
+              <div class="col-12">
+                <label for="address" class="form-label fw-medium text-secondary">Address <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="bi bi-house-door text-info"></i></span>
+                  <textarea class="form-control form-control-lg py-2" id="address" name="address" required rows="2" placeholder="123 Main St, Apartment 4"></textarea>
+                  <div class="invalid-feedback">
+                    Please enter your shipping address.
+                  </div>
+                </div>
+              </div>
+              
+              <!-- City -->
+              <div class="col-md-6">
+                <label for="city" class="form-label fw-medium text-secondary">City <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="bi bi-building text-info"></i></span>
+                  <input type="text" class="form-control form-control-lg py-2" id="city" name="city" required placeholder="Mumbai">
+                  <div class="invalid-feedback">
+                    Please enter your city.
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Payment Method -->
+              <div class="col-md-6">
+    <label class="form-label fw-medium text-secondary">Payment Method <span class="text-danger">*</span></label>
+    <div class="btn-group w-100 shadow-sm" role="group">
+        <input type="radio" class="btn-check" name="payment" id="cod" value="cod" checked>
+        <label class="btn btn-outline-info rounded-start-pill" for="cod"><i class="bi bi-wallet2 me-1"></i> COD</label>
+        
+        <input type="radio" class="btn-check" name="payment" id="card" value="card">
+        <label class="btn btn-outline-info" for="card"><i class="bi bi-credit-card me-1"></i> Card</label>
+        
+        <input type="radio" class="btn-check" name="payment" id="upi" value="upi">
+        <label class="btn btn-outline-info rounded-end-pill" for="upi"><i class="bi bi-phone me-1"></i> UPI</label>
+    </div>
+</div>
+            </div>
+
+            <!-- Razorpay QR Code Section (hidden by default) -->
+           <div id="razorpay-qr-section" class="mt-4" style="display: none;">
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">Scan QR Code to Pay</h5>
+    </div>
+    <div class="card-body text-center">
+      <div id="razorpay-qr-code" class="mb-3"></div>
+      <div class="upi-details" style="display: none;">
+        <p class="mb-1">Or send payment to:</p>
+        <h5 class="mb-1">your-merchant-vpa@razorpay</h5>
+        <p class="small mb-1">Amount: ₹{{ total_price|floatformat:"2" }}</p>
+        <p class="small mb-0">Order ID: {{ razorpay_order_id }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+            <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" value="{{ razorpay_order_id }}">
+            <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
+            <input type="hidden" name="razorpay_signature" id="razorpay_signature" value="">
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5 pt-2">
+              <a href="{% url 'cart' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                <i class="bi bi-arrow-left me-1"></i> Back to Cart
+              </a>
+              <button type="submit" class="btn btn-info rounded-pill px-4 py-2 shadow-sm text-white" id="place-order-btn">
+                <i class="bi bi-cart-check-fill me-1"></i> Place Order
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-gradient-info {
+    background: linear-gradient(135deg, #17a2b8, #1abc9c);
+  }
+  
+  .hover-lift {
+    transition: all 0.3s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 2rem rgba(0,0,0,0.1) !important;
+  }
+  
+  .form-control-lg {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+    transform: translateY(-2px);
+  }
+  
+  .rounded-pill {
+    border-radius: 50rem !important;
+  }
+  
+  .rounded-start-pill {
+    border-top-left-radius: 50rem !important;
+    border-bottom-left-radius: 50rem !important;
+  }
+  
+  .rounded-end-pill {
+    border-top-right-radius: 50rem !important;
+    border-bottom-right-radius: 50rem !important;
+  }
+  
+  .input-group-text {
+    min-width: 45px;
+    justify-content: center;
+  }
+  
+  .form-control:focus {
+    border-color: #17a2b8;
+    box-shadow: 0 0 0 0.25rem rgba(23, 162, 184, 0.25);
+  }
+  
+  .btn-outline-info {
+    color: #17a2b8;
+    border-color: #17a2b8;
+  }
+  
+  .btn-outline-info:hover {
+    background-color: rgba(23, 162, 184, 0.1);
+  }
+  
+  .btn-check:checked + .btn-outline-info {
+    background-color: #17a2b8;
+    color: white;
+  }
+  
+  #razorpay-qr-code img {
+    max-width: 250px;
+    height: auto;
+    margin: 0 auto;
+  }
+</style>
+
+<script>
+// Client-side form validation
+(function () {
+  'use strict'
+  
+  var forms = document.querySelectorAll('.needs-validation')
+  
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Payment elements
+    const paymentMethodRadios = document.querySelectorAll('input[name="payment"]');
+    const razorpayQrSection = document.getElementById('razorpay-qr-section');
+    const razorpayQrCode = document.getElementById('razorpay-qr-code');
+    const checkoutForm = document.getElementById('checkout-form');
+    const razorpayOrderId = document.getElementById('razorpay_order_id').value;
+    const totalPrice = parseFloat('{{ total_price|floatformat:"2" }}') * 100;
+    
+    // Initialize QR code section as hidden
+    razorpayQrSection.style.display = 'none';
+    
+    // Handle payment method change
+    paymentMethodRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'upi') {
+                razorpayQrSection.style.display = 'block';
+                generateRazorpayQrCode();
+            } else {
+                razorpayQrSection.style.display = 'none';
+            }
+        });
+    });
+    
+    // Generate Razorpay QR code
+    function generateRazorpayQrCode() {
+        // Clear previous QR code
+        razorpayQrCode.innerHTML = '';
+        
+        // Create payment link - using Razorpay's standard UPI link format
+        const paymentLink = `upi://pay?pa=your-merchant-vpa@razorpay&pn=Your%20Store&am=${totalPrice/100}&tn=Order%20Payment&cu=INR`;
+        
+        // Generate QR code
+        try {
+            QRCode.toCanvas(razorpayQrCode, paymentLink, {
+                width: 250,
+                margin: 2,
+                color: {
+                    dark: '#17a2b8',
+                    light: '#ffffff'
+                },
+                errorCorrectionLevel: 'H'
+            }, function(error) {
+                if (error) {
+                    console.error('QR Code generation error:', error);
+                    showQrError();
+                }
+            });
+        } catch (e) {
+            console.error('QR Code initialization error:', e);
+            showQrError();
+        }
+    }
+    
+    function showQrError() {
+        razorpayQrCode.innerHTML = `
+            <div class="alert alert-warning p-2">
+                <p class="mb-1">QR generation failed. Please use this UPI ID:</p>
+                <h5 class="mb-1">your-merchant-vpa@razorpay</h5>
+                <p class="small mb-0">Amount: ₹${totalPrice/100}</p>
+                <p class="small mb-0">Order ID: ${razorpayOrderId}</p>
+            </div>
+        `;
+    }
+    
+    // Main form submission handler
+    checkoutForm.addEventListener('submit', function(e) {
+        const selectedPaymentMethod = document.querySelector('input[name="payment"]:checked').value;
+        
+        // Only intercept for online payments (card/UPI)
+    if (selectedPaymentMethod === 'card' || selectedPaymentMethod === 'upi') {
+        e.preventDefault();
+        proceedWithRazorpayPayment();
+    }
+        // Only intercept for online payments (card/UPI)
+        if (selectedPaymentMethod !== 'cod') {
+            e.preventDefault();
+            
+            // For UPI, check if we should show QR code or proceed directly
+            if (selectedPaymentMethod === 'upi' && razorpayQrSection.style.display === 'block') {
+                // User might have already scanned QR, proceed with payment
+                proceedWithRazorpayPayment();
+            } else {
+                proceedWithRazorpayPayment();
+            }
+        }
+        // For COD, let the form submit normally
+    });
+    
+    function proceedWithRazorpayPayment() {
+        const options = {
+            key: '{{ razorpay_key_id }}',
+            amount: totalPrice.toString(),
+            currency: 'INR',
+            name: 'Your Store Name',
+            description: 'Order Payment',
+            order_id: razorpayOrderId,
+            handler: function(response) {
+                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                checkoutForm.submit();
+            },
+            prefill: {
+                name: document.getElementById('fname').value + ' ' + document.getElementById('lname').value,
+                email: document.getElementById('email').value,
+                contact: document.getElementById('phone').value
+            },
+            theme: {
+                color: '#17a2b8'
+            },
+            modal: {
+                ondismiss: function() {
+                    // Handle when user closes the payment modal
+                    console.log('Payment modal dismissed');
+                }
+            }
+        };
+        
+        const rzp = new Razorpay(options);
+        rzp.open();
+    }
+});
+</script>
+{% endblock %}

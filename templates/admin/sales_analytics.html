@@ -1,0 +1,204 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.css">
+<link rel="stylesheet" href="{% static 'admin/css/sales_analytics.css' %}">
+{% endblock %}
+
+{% block extrahead %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="sales-analytics-container">
+    <h1><i class="fas fa-chart-line"></i> Sales Analytics</h1>
+    
+    <div class="date-filter">
+        <form method="get">
+            <div class="form-group">
+                <label for="start_date">From:</label>
+                <input type="date" id="start_date" name="start_date" value="{{ start_date }}">
+            </div>
+            <div class="form-group">
+                <label for="end_date">To:</label>
+                <input type="date" id="end_date" name="end_date" value="{{ end_date }}">
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+        </form>
+    </div>
+    
+    <div class="charts-row">
+        <div class="chart-container">
+            <h3>Daily Sales</h3>
+            <canvas id="dailySalesChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h3>Monthly Sales</h3>
+            <canvas id="monthlySalesChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="tables-row">
+        <div class="table-container">
+            <h3>Top Selling Products</h3>
+            <table class="analytics-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Sold</th>
+                        <th>Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in top_products %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'admin:accounts_product_change' product.id %}">
+                                {{ product.name }}
+                            </a>
+                        </td>
+                        <td>{{ product.total_sold|default:0 }}</td>
+                        <td>${{ product.revenue|default:0|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="table-container">
+            <h3>Top Customers</h3>
+            <table class="analytics-table">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Orders</th>
+                        <th>Total Spent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in top_customers %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'admin:auth_user_change' customer.id %}">
+                                {{ customer.get_full_name|default:customer.username }}
+                            </a>
+                        </td>
+                        <td>{{ customer.order_count }}</td>
+                        <td>${{ customer.total_spent|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Daily Sales Chart
+    const dailyCtx = document.getElementById('dailySalesChart').getContext('2d');
+    const dailySalesChart = new Chart(dailyCtx, {
+        type: 'bar',
+        data: {
+            labels: [
+                {% for day in daily_sales %}
+                    "{{ day.day|date:'M d' }}"{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Sales ($)',
+                data: [
+                    {% for day in daily_sales %}
+                        {{ day.total_sales|default:0 }}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '$' + context.raw.toFixed(2);
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Monthly Sales Chart
+    const monthlyCtx = document.getElementById('monthlySalesChart').getContext('2d');
+    const monthlySalesChart = new Chart(monthlyCtx, {
+        type: 'line',
+        data: {
+            labels: [
+                {% for month in monthly_sales %}
+                    "{{ month.month|date:'M Y' }}"{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Sales ($)',
+                data: [
+                    {% for month in monthly_sales %}
+                        {{ month.total_sales|default:0 }}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '$' + context.raw.toFixed(2);
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

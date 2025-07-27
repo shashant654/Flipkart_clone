@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}Return Policy - E-Commerce{% endblock %}
+
+{% block content %}
+<div class="container my-2">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <div class="text-center mb-5">
+        <h1 class="display-6 fw-bold text-gradient-info">
+          <i class="bi bi-currency-exchange me-2 text-gradient-info"></i>Return & Refund Policy
+        </h1>
+        <p class="text-muted">Updated: January 1, 2025</p>
+        <hr class="w-25 mx-auto">
+      </div>
+
+      <div class="accordion" id="returnPolicyAccordion">
+        <!-- Section 1 -->
+        <div class="accordion-item bg-light border-0 mb-3 shadow-sm rounded-4 hover-lift-sm">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button fw-semibold text-gradient-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              1. Return Eligibility
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#returnPolicyAccordion">
+            <div class="accordion-body">
+              <p>You may return most new, unopened items within 30 days of delivery for a full refund. To be eligible for a return:</p>
+              <ul>
+                <li>Item must be in its original condition</li>
+                <li>Item must be in the original packaging</li>
+                <li>Proof of purchase is required</li>
+              </ul>
+              <p class="text-danger mt-2">Certain items cannot be returned (e.g., perishable goods, personalized items).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="accordion-item bg-light border-0 mb-3 shadow-sm rounded-4 hover-lift-sm">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button fw-semibold collapsed text-gradient-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              2. Return Process
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#returnPolicyAccordion">
+            <div class="accordion-body">
+              <ol>
+                <li>Contact our customer service to initiate a return</li>
+                <li>Receive a Return Authorization Number</li>
+                <li>Pack the item securely with all original tags</li>
+                <li>Include the return form provided by customer service</li>
+                <li>Ship the package to the provided address</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="accordion-item bg-light border-0 mb-3 shadow-sm rounded-4 hover-lift-sm">
+          <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button fw-semibold collapsed text-gradient-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              3. Refunds
+            </button>
+          </h2>
+          <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#returnPolicyAccordion">
+            <div class="accordion-body">
+              <p>Once your return is received and inspected, we will notify you of the approval or rejection of your refund.</p>
+              <p>Approved refunds will be processed to the original payment method within 7–10 business days.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4 -->
+        <div class="accordion-item bg-light border-0 mb-3 shadow-sm rounded-4 hover-lift-sm">
+          <h2 class="accordion-header" id="headingFour">
+            <button class="accordion-button fw-semibold collapsed text-gradient-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+              4. Exchanges
+            </button>
+          </h2>
+          <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#returnPolicyAccordion">
+            <div class="accordion-body">
+              <p>We only replace items if they are defective or damaged. For exchanges, contact us at 
+              <a href="mailto:support@ecommerce.com" class="text-decoration-underline fw-semibold text-gradient-info">support@ecommerce.com</a>.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 5 -->
+        <div class="accordion-item bg-light border-0 mb-3 shadow-sm rounded-4 hover-lift-sm">
+          <h2 class="accordion-header" id="headingFive">
+            <button class="accordion-button fw-semibold collapsed text-gradient-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+              5. Return Shipping
+            </button>
+          </h2>
+          <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#returnPolicyAccordion">
+            <div class="accordion-body">
+              <p>Customers are responsible for return shipping costs unless the return is due to our error (wrong item shipped, defective item, etc.).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-warning shadow-sm border-warning-subtle mt-5 p-4 rounded-4">
+        <p class="mb-0 fs-6">
+          <strong>Need help with returns?</strong> Contact us at 
+          <a href="mailto:support@ecommerce.com" class="text-decoration-underline fw-semibold text-gradient-info">support@ecommerce.com</a> before shipping your return.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-gradient-info {
+    background: linear-gradient(135deg, #17a2b8, #1abc9c);
+  }
+
+  .text-gradient-info {
+    background: linear-gradient(to right, #17a2b8, #1abc9c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hover-lift-sm {
+    transition: all 0.2s ease;
+  }
+
+  .hover-lift-sm:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1) !important;
+  }
+
+  .rounded-4 {
+    border-radius: 0.8rem !important;
+  }
+
+  .accordion-button:not(.collapsed) {
+    background-color: rgba(23, 162, 184, 0.1);
+    color: #17a2b8;
+  }
+
+  .accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(23, 162, 184, 0.25);
+    border-color: #17a2b8;
+  }
+
+  a.text-gradient-info:hover {
+    color: #138496;
+  }
+</style>
+{% endblock %}

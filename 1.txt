@@ -1,0 +1,22 @@
+python -m venv ourenv
+.\ourenv\Scripts\Activate.ps1
+pip install django razorpay
+pip freeze > requirements.txt
+
+
+
+✅ What is a Procfile?
+A Procfile tells Render (or any other platform like Heroku) how to start your app — in this case, it tells Render to run Django using gunicorn, a production web server.
+
+
+✅ Step 1: Install Required Deployment Packages
+You're missing a few required deployment libraries for Render. Install them now:
+
+
+pip install gunicorn whitenoise dj-database-url psycopg2-binary
+Then update requirements.txt again:
+
+
+pip freeze > requirements.txt
+
+pip install setuptools

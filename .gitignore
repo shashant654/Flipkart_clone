@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+*.log
+
+# Virtual environment
+ourenv/
+env/
+venv/
+ENV/
+
+# Django
+*.sqlite3
+db.sqlite3
+*.db
+media/
+staticfiles/
+*.mo
+*.pot
+
+# VS Code
+.vscode/
+
+# OS Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Env / Secrets
+.env
+*.env
+
+# Compiled
+*.bak
+*.tmp
+*.swp
+*.swo
+*.~ 
+
+# Pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Profiles & Render
+Procfile

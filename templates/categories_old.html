@@ -1,0 +1,59 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block title %}Categories -MySite{% endblock %}
+{% block content %}
+<h2 class="mb-4 text-center">Shop by Category</h2>
+<div class="row text-center">
+  <div class="col-md-4 shadow-lg border-0 rounded-4">
+    <div class="card">
+      <img style="height: 200px; object-fit: cover;"
+        src="{% static 'images/fashion.png' %}"
+        class="card-img-top"
+        alt="Fashion"
+      />
+      <div class="card-body">
+        <h5 class="card-title">Fashion</h5>
+        <p class="card-text">
+          Explore the latest trends in clothing and accessories.
+        </p>
+        <a href="#" class="btn btn-dark">Shop Now</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+       <img style="height: 200px; object-fit: cover;"
+        src="{% static 'images/footwear.jpeg' %}"
+        class="card-img-top"
+        alt="Fashion"
+      />
+     
+      <div class="card-body">
+        <h5 class="card-title">Footwear</h5>
+        <p class="card-text">
+          Stylish and comfortable footwear for every occasion.
+        </p>
+        <a href="#" class="btn btn-dark">Shop Now</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <img style="height: 200px; object-fit: cover;"
+        src="{% static 'images/electronics.png' %}"
+        class="card-img-top"
+        alt="Fashion"
+      />
+      <div class="card-body">
+        <h5 class="card-title">Electronics</h5>
+        <p class="card-text">
+          Latest gadgets and devices to upgrade your lifestyle.
+        </p>
+        <a href="#" class="btn btn-dark">Shop Now</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

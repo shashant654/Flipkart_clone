@@ -1,0 +1,357 @@
+{% extends "admin/base_site.html" %} {% load static %} {% block extrastyle %} {{
+block.super }}
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.css"
+/>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}" />
+{% endblock %} {% block extrahead %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+{% endblock %} {% block content %}
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
+    <div class="quick-actions">
+      <a href="{% url 'admin:accounts_product_add' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add Product
+      </a>
+      <a href="{% url 'admin:accounts_order_add' %}" class="btn btn-success">
+        <i class="fas fa-plus"></i> Add Order
+      </a>
+      <a href="{% url 'admin:auth_user_add' %}" class="btn btn-info">
+        <i class="fas fa-user-plus"></i> Add User
+      </a>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <!-- Stat Cards -->
+    <div class="stat-card revenue">
+      <div class="stat-icon">
+        <i class="fas fa-dollar-sign"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Total Revenue</h3>
+        <p>${{ total_revenue|floatformat:2 }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card users">
+      <div class="stat-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Total Users</h3>
+        <p>{{ user_count }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card orders">
+      <div class="stat-icon">
+        <i class="fas fa-shopping-cart"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Total Orders</h3>
+        <p>{{ order_count }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card products">
+      <div class="stat-icon">
+        <i class="fas fa-boxes"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Total Products</h3>
+        <p>{{ product_count }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <!-- Existing Sales Chart -->
+    <div class="chart-container">
+      <h3>Sales Last 30 Days</h3>
+      <canvas id="salesChart"></canvas>
+    </div>
+
+    <!-- Existing Top Products Chart -->
+    <div class="chart-container">
+      <h3>Top Selling Products</h3>
+      <canvas id="productsChart"></canvas>
+    </div>
+
+    <!-- NEW: Top Categories Chart -->
+    <div class="chart-container">
+      <h3>Top Selling Categories</h3>
+      <canvas id="categoriesChart"></canvas>
+    </div>
+  </div>
+
+  <div class="tables-row">
+    <div class="table-container">
+      <h3>Recent Orders</h3>
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in recent_orders %}
+          <tr>
+            <td>
+              <a href="{% url 'admin:accounts_order_change' order.id %}"
+                >{{ order.order_id|truncatechars:10 }}</a
+              >
+            </td>
+            <td>{{ order.first_name }} {{ order.last_name }}</td>
+            <td>${{ order.total_price }}</td>
+            <td>
+              <span class="status-badge status-{{ order.status|lower }}">
+                {{ order.status }}
+              </span>
+            </td>
+            <td>{{ order.created_at|date:"M d, Y" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-container">
+      <h3>Recent Users</h3>
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Joined</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in recent_users %}
+          <tr>
+            <td>
+              <a href="{% url 'admin:auth_user_change' user.id %}"
+                >{{ user.username }}</a
+              >
+            </td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.date_joined|date:"M d, Y" }}</td>
+            <td>
+              <span
+                class="status-badge {% if user.is_active %}status-active{% else %}status-inactive{% endif %}"
+              >
+                {% if user.is_active %}Active{% else %}Inactive{% endif %}
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="table-container">
+      <h3>Low Stock Products (≤ 10)</h3>
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Stock</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in low_stock_products %}
+          <tr>
+            <td>
+              <a href="{% url 'admin:accounts_product_change' product.id %}"
+                >{{ product.name }}</a
+              >
+            </td>
+            <td>{{ product.category.name }}</td>
+            <td
+              class="{% if product.quantity < 5 %}text-danger{% elif product.quantity < 10 %}text-warning{% endif %}"
+            >
+              {{ product.quantity }}
+            </td>
+            <td>${{ product.selling_price }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Sales Chart
+      const salesCtx = document.getElementById('salesChart').getContext('2d');
+      const salesChart = new Chart(salesCtx, {
+          type: 'line',
+          data: {
+              labels: [
+                  {% for day in daily_sales %}
+                      "{{ day.day|date:'M d' }}"{% if not forloop.last %},{% endif %}
+                  {% endfor %}
+              ],
+              datasets: [{
+                  label: 'Daily Sales ($)',
+                  data: [
+                      {% for day in daily_sales %}
+                          {{ day.total_sales|default:0 }}{% if not forloop.last %},{% endif %}
+                      {% endfor %}
+                  ],
+                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 2,
+                  tension: 0.4,
+                  fill: true
+              }]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      position: 'top',
+                  },
+                  tooltip: {
+                      callbacks: {
+                          label: function(context) {
+                              return '$' + context.raw.toFixed(2);
+                          }
+                      }
+                  }
+              },
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      ticks: {
+                          callback: function(value) {
+                              return '$' + value;
+                          }
+                      }
+                  }
+              }
+          }
+      });
+
+      // Products Chart
+      const productsCtx = document.getElementById('productsChart').getContext('2d');
+      const productsChart = new Chart(productsCtx, {
+          type: 'doughnut',
+          data: {
+              labels: [
+                  {% for product in top_products %}
+                      "{{ product.name }}"{% if not forloop.last %},{% endif %}
+                  {% endfor %}
+              ],
+              datasets: [{
+                  data: [
+                      {% for product in top_products %}
+                          {{ product.total_sold|default:0 }}{% if not forloop.last %},{% endif %}
+                      {% endfor %}
+                  ],
+                  backgroundColor: [
+                      '#4e73df',
+                      '#1cc88a',
+                      '#36b9cc',
+                      '#f6c23e',
+                      '#e74a3b'
+                  ],
+                  hoverBackgroundColor: [
+                      '#2e59d9',
+                      '#17a673',
+                      '#2c9faf',
+                      '#dda20a',
+                      '#be2617'
+                  ],
+                  hoverBorderColor: "rgba(234, 236, 244, 1)",
+              }]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      position: 'right',
+                  },
+                  tooltip: {
+                      callbacks: {
+                          label: function(context) {
+                              return context.label + ': ' + context.raw + ' sold';
+                          }
+                      }
+                  }
+              },
+              cutout: '70%',
+          }
+      });
+
+      // Categories Chart (Doughnut)
+      const categoriesCtx = document.getElementById('categoriesChart').getContext('2d');
+      const categoriesChart = new Chart(categoriesCtx, {
+          type: 'doughnut',
+          data: {
+              labels: [
+                  {% for category in top_categories %}
+                      "{{ category.name }}"{% if not forloop.last %},{% endif %}
+                  {% endfor %}
+              ],
+              datasets: [{
+                  data: [
+                      {% for category in top_categories %}
+                          {{ category.total_sold|default:0 }}{% if not forloop.last %},{% endif %}
+                      {% endfor %}
+                  ],
+                  backgroundColor: [
+                      '#4e73df',
+                      '#1cc88a',
+                      '#36b9cc',
+                      '#f6c23e',
+                      '#e74a3b'
+                  ],
+                  hoverBackgroundColor: [
+                      '#2e59d9',
+                      '#17a673',
+                      '#2c9faf',
+                      '#dda20a',
+                      '#be2617'
+                  ],
+                  hoverBorderColor: "rgba(234, 236, 244, 1)",
+              }]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      position: 'right',
+                  },
+                  tooltip: {
+                      callbacks: {
+                          label: function(context) {
+                              const label = context.label || '';
+                              const value = context.raw || 0;
+                              const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                              const percentage = Math.round((value / total) * 100);
+                              return `${label}: ${value} sold (${percentage}%)`;
+                          }
+                      }
+                  }
+              },
+              cutout: '70%',
+          }
+      });
+  });
+</script>
+{% endblock %}

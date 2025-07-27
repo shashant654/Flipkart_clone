@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy - E-Commerce{% endblock %}
+
+{% block content %}
+<div class="container py-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="text-center mb-5">
+        <h1 class="fw-bold display-5 text-gradient-info">
+          <i class="bi bi-shield-lock-fill me-2"></i>Privacy Policy
+        </h1>
+        <p class="text-muted">Last Updated: January 1, 2025</p>
+      </div>
+
+      <!-- Privacy Policy Cards -->
+      <div class="card mb-4 border-0 rounded-4 shadow-sm hover-lift-sm">
+        <div class="card-body p-4">
+          <h3 class="h5 fw-semibold mb-3 text-info">1. Information We Collect</h3>
+          <p>
+            We collect information to provide better services to our users. This
+            includes:
+          </p>
+          <ul class="ps-3">
+            <li>
+              <strong>Personal Information:</strong> Name, email, phone number,
+              shipping address
+            </li>
+            <li>
+              <strong>Payment Information:</strong> Credit card details
+              (processed securely by our payment partners)
+            </li>
+            <li>
+              <strong>Device Information:</strong> IP address, browser type,
+              operating system
+            </li>
+            <li>
+              <strong>Usage Data:</strong> Pages visited, products viewed, time
+              spent on site
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card mb-4 border-0 rounded-4 shadow-sm hover-lift-sm">
+        <div class="card-body p-4">
+          <h3 class="h5 fw-semibold mb-3 text-info">2. How We Use Your Information</h3>
+          <p>We use the information we collect to:</p>
+          <ul class="ps-3">
+            <li>Process and fulfill your orders</li>
+            <li>Improve our products and services</li>
+            <li>Communicate with you about orders, products, and promotions</li>
+            <li>Prevent fraud and enhance security</li>
+            <li>Comply with legal obligations</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card mb-4 border-0 rounded-4 shadow-sm hover-lift-sm">
+        <div class="card-body p-4">
+          <h3 class="h5 fw-semibold mb-3 text-info">3. Information Sharing</h3>
+          <p>
+            We do not sell your personal information. We may share information
+            with:
+          </p>
+          <ul class="ps-3">
+            <li>Service providers (payment processors, shipping carriers)</li>
+            <li>Legal authorities when required by law</li>
+            <li>Business partners (with your consent)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card mb-4 border-0 rounded-4 shadow-sm hover-lift-sm">
+        <div class="card-body p-4">
+          <h3 class="h5 fw-semibold mb-3 text-info">4. Data Security</h3>
+          <p>
+            We implement appropriate security measures to protect your personal
+            information. However, no method of transmission over the Internet is
+            100% secure.
+          </p>
+        </div>
+      </div>
+
+      <div class="card mb-4 border-0 rounded-4 shadow-sm hover-lift-sm">
+        <div class="card-body p-4">
+          <h3 class="h5 fw-semibold mb-3 text-info">5. Your Rights</h3>
+          <p>You have the right to:</p>
+          <ul class="ps-3">
+            <li>Access, correct, or delete your personal information</li>
+            <li>Opt-out of marketing communications</li>
+            <li>Withdraw consent for data processing</li>
+            <li>Lodge a complaint with a regulatory authority</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card mb-4 border-0 rounded-4 shadow-sm hover-lift-sm">
+        <div class="card-body p-4">
+          <h3 class="h5 fw-semibold mb-3 text-info">6. Cookies</h3>
+          <p>
+            We use cookies to enhance your browsing experience. You can disable
+            cookies in your browser settings, but some site features may not
+            work properly.
+          </p>
+        </div>
+      </div>
+
+      <div class="card mb-4 border-0 rounded-4 shadow-sm hover-lift-sm">
+        <div class="card-body p-4">
+          <h3 class="h5 fw-semibold mb-3 text-info">7. Changes to This Policy</h3>
+          <p>
+            We may update this policy periodically. We will notify you of
+            significant changes by posting the new policy on our website.
+          </p>
+        </div>
+      </div>
+
+      <div class="alert bg-info-soft border-info mt-5 p-4 rounded-4 shadow-sm text-center hover-lift-sm">
+        <p class="mb-0 fs-6">
+          <strong>Need help?</strong> For any privacy-related concerns, please
+          contact our Data Protection Officer at
+          <a
+            href="mailto:privacy@ecommerce.com"
+            class="text-info fw-semibold text-decoration-underline"
+            >privacy@ecommerce.com</a
+          >.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-gradient-info {
+    background: linear-gradient(135deg, #17a2b8, #1abc9c);
+  }
+  
+  .text-gradient-info {
+    background: linear-gradient(to right, #17a2b8, #1abc9c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .hover-lift-sm {
+    transition: all 0.2s ease;
+  }
+  
+  .hover-lift-sm:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1) !important;
+  }
+  
+  .rounded-4 {
+    border-radius: 0.8rem !important;
+  }
+  
+  .bg-info-soft {
+    background-color: rgba(23, 162, 184, 0.1);
+  }
+  
+  .border-info {
+    border-color: rgba(23, 162, 184, 0.25) !important;
+  }
+</style>
+{% endblock %}
